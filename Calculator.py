@@ -1,84 +1,51 @@
-import math
+import tkinter as tk
+from tkinter import messagebox
 
-def show_menu():
-    print("\nماشین حساب پیشرفته")
-    print("1. جمع (+)")
-    print("2. تفریق (-)")
-    print("3. ضرب (*)")
-    print("4. تقسیم (/)")
-    print("5. توان (^)")
-    print("6. جذر (√)")
-    print("7. سینوس (sin)")
-    print("8. کسینوس (cos)")
-    print("9. تانژانت (tan)")
-    print("10. لگاریتم (log)")
-    print("11. خروج")
+# Create the main window
+root = tk.Tk()
+root.title("Graphical Calculator")
+root.geometry("400x500")
+root.resizable(False, False)
 
-def get_two_numbers():
-    num1 = float(input("عدد اول: "))
-    num2 = float(input("عدد دوم: "))
-    return num1, num2
+# Colors
+bg_color = "#2C3E50"
+btn_color = "#1ABC9C"
+text_color = "#ECF0F1"
 
-def main():
-    while True:
-        show_menu()
-        choice = input("\nیک گزینه انتخاب کنید (1-11): ")
+# Configure the main window
+root.configure(bg=bg_color)
 
-        if choice == '1':  # جمع
-            num1, num2 = get_two_numbers()
-            print("نتیجه:", num1 + num2)
+# Calculator display
+entry = tk.Entry(root, font=("Arial", 20), bg=text_color, fg=bg_color, bd=10, justify="right")
+entry.grid(row=0, column=0, columnspan=4, padx=10, pady=10)
 
-        elif choice == '2':  # تفریق
-            num1, num2 = get_two_numbers()
-            print("نتیجه:", num1 - num2)
+# Click handler for buttons
+def button_click(value):
+    if value == "C":
+        entry.delete(0, tk.END)
+    elif value == "=":
+        try:
+            result = eval(entry.get())
+            entry.delete(0, tk.END)
+            entry.insert(tk.END, str(result))
+        except Exception as e:
+            messagebox.showerror("Error", "Invalid Input")
+    else:
+        entry.insert(tk.END, value)
 
-        elif choice == '3':  # ضرب
-            num1, num2 = get_two_numbers()
-            print("نتیجه:", num1 * num2)
+# Button layout
+buttons = [
+    ("7", 1, 0), ("8", 1, 1), ("9", 1, 2), ("/", 1, 3),
+    ("4", 2, 0), ("5", 2, 1), ("6", 2, 2), ("*", 2, 3),
+    ("1", 3, 0), ("2", 3, 1), ("3", 3, 2), ("-", 3, 3),
+    ("C", 4, 0), ("0", 4, 1), ("=", 4, 2), ("+", 4, 3),
+]
 
-        elif choice == '4':  # تقسیم
-            num1, num2 = get_two_numbers()
-            if num2 != 0:
-                print("نتیجه:", num1 / num2)
-            else:
-                print("خطا: تقسیم بر صفر ممکن نیست!")
+# Add buttons to the window
+for (text, row, col) in buttons:
+    button = tk.Button(root, text=text, font=("Arial", 18), bg=btn_color, fg=text_color,
+                       width=5, height=2, command=lambda val=text: button_click(val))
+    button.grid(row=row, column=col, padx=5, pady=5)
 
-        elif choice == '5':  # توان
-            num1, num2 = get_two_numbers()
-            print("نتیجه:", num1 ** num2)
-
-        elif choice == '6':  # جذر
-            num = float(input("عدد: "))
-            if num >= 0:
-                print("نتیجه:", math.sqrt(num))
-            else:
-                print("خطا: عدد منفی جذر ندارد!")
-
-        elif choice == '7':  # سینوس
-            num = float(input("عدد (به درجه): "))
-            print("نتیجه:", math.sin(math.radians(num)))
-
-        elif choice == '8':  # کسینوس
-            num = float(input("عدد (به درجه): "))
-            print("نتیجه:", math.cos(math.radians(num)))
-
-        elif choice == '9':  # تانژانت
-            num = float(input("عدد (به درجه): "))
-            print("نتیجه:", math.tan(math.radians(num)))
-
-        elif choice == '10':  # لگاریتم
-            num = float(input("عدد: "))
-            if num > 0:
-                print("نتیجه:", math.log(num))
-            else:
-                print("خطا: لگاریتم اعداد غیرمثبت تعریف نشده است!")
-
-        elif choice == '11':  # خروج
-            print("خدانگهدار!")
-            break
-
-        else:
-            print("گزینه نامعتبر است. لطفاً دوباره تلاش کنید.")
-
-if __name__ == "__main__":
-    main()
+# Run the application
+root.mainloop()
